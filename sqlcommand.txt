@@ -1,0 +1,10 @@
+CREATE TABLE awards (
+    awards_id INTEGER PRIMARY KEY,
+    category VARCHAR(255),
+    year INTEGER
+);
+
+CREATE TABLE genre (
+    genre_id INTEGER PRIMARY KEY,
+    genre VARCHAR(100)
+);
