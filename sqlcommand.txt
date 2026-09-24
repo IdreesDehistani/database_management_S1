@@ -27,5 +27,23 @@ CREATE TABLE movie_genre (
     PRIMARY KEY (movieid, genreid),
 
     FOREIGN KEY (movieid) REFERENCES movie(movieid),
-    FOREIGN KEY (genreid) REFERENCES awards(genreid)
+    FOREIGN KEY (genreid) REFERENCES genre(genreid)
+);
+
+CREATE TABLE movie (
+    movieid INTEGER PRIMARY KEY,
+    title VARCHAR(255),
+	studio VARCHAR(255),
+	runtime INTEGER,
+	rating VARCHAR(100),
+	reldate DATE,
+	prodbudget INTEGER
+	
+);
+
+CREATE TABLE score (
+    movieid INT PRIMARY KEY,
+    userscore INT,
+    metascore INT,
+    FOREIGN KEY (movieid) REFERENCES movie(movieid)
 );
