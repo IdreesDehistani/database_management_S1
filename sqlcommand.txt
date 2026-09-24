@@ -1,10 +1,31 @@
 CREATE TABLE awards (
-    awards_id INTEGER PRIMARY KEY,
+    awardsid INTEGER PRIMARY KEY,
     category VARCHAR(255),
     year INTEGER
 );
 
 CREATE TABLE genre (
-    genre_id INTEGER PRIMARY KEY,
+    genreid INTEGER PRIMARY KEY,
     genre VARCHAR(100)
+);
+
+CREATE TABLE movie_awards (
+    movieid INTEGER,
+    awardsid INTEGER,
+    Rank INTEGER,
+
+    PRIMARY KEY (movieid, awardsid),
+
+    FOREIGN KEY (movieid) REFERENCES movie(movieid),
+    FOREIGN KEY (awardsid) REFERENCES awards(awardsid)
+);
+
+CREATE TABLE movie_genre (
+    movieid INTEGER,
+    genreid INTEGER,
+
+    PRIMARY KEY (movieid, genreid),
+
+    FOREIGN KEY (movieid) REFERENCES movie(movieid),
+    FOREIGN KEY (genreid) REFERENCES awards(genreid)
 );
