@@ -49,11 +49,11 @@ CREATE TABLE score (
 );
 
 CREATE TABLE cast_member (
-    cast_id INTEGER PRIMARY KEY,
-    cast_name VARCHAR(255)
+    castid INTEGER PRIMARY KEY,
+    castname VARCHAR(255)
 );
 
 CREATE TABLE director (
-    director_id INTEGER PRIMARY KEY,
-    director_name VARCHAR(255)
+    directorid INTEGER PRIMARY KEY,
+    directorname VARCHAR(255)
 );
