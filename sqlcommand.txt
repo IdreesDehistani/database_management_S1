@@ -48,7 +48,6 @@ CREATE TABLE score (
     FOREIGN KEY (movieid) REFERENCES movie(movieid)
 );
 
-<<<<<<< HEAD
 CREATE TABLE cast_member (
     castid INTEGER PRIMARY KEY,
     castname VARCHAR(255)
@@ -57,7 +56,6 @@ CREATE TABLE cast_member (
 CREATE TABLE director (
     directorid INTEGER PRIMARY KEY,
     directorname VARCHAR(255)
-=======
 CREATE TABLE sales (
     salesid INTEGER PRIMARY KEY,
     theater_count INTEGER,
@@ -73,5 +71,4 @@ CREATE TABLE movie_sales (
 
     FOREIGN KEY (movieid) REFERENCES movie(movieid),
     FOREIGN KEY (salesid) REFERENCES sales(salesid)
->>>>>>> 87826cb (idris's changes)
 );
