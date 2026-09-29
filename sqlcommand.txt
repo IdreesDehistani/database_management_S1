@@ -55,7 +55,8 @@ CREATE TABLE cast_member (
 
 CREATE TABLE director (
     directorid INTEGER PRIMARY KEY,
-    directorname VARCHAR(255)
+    directorname VARCHAR(255));
+
 CREATE TABLE sales (
     salesid INTEGER PRIMARY KEY,
     theater_count INTEGER,
@@ -71,4 +72,24 @@ CREATE TABLE movie_sales (
 
     FOREIGN KEY (movieid) REFERENCES movie(movieid),
     FOREIGN KEY (salesid) REFERENCES sales(salesid)
+);
+
+CREATE TABLE movie_director (
+    movieid INTEGER,
+    directorid INTEGER,
+
+    PRIMARY KEY (movieid, directorid),
+
+    FOREIGN KEY (movieid) REFERENCES movie(movieid),
+    FOREIGN KEY (directorid) REFERENCES director(directorid)
+);
+
+CREATE TABLE movie_cast (
+    movieid INTEGER,
+    castid INTEGER,
+
+    PRIMARY KEY (movieid, castid),
+
+    FOREIGN KEY (movieid) REFERENCES movie(movieid),
+    FOREIGN KEY (castid) REFERENCES cast_member(castid)
 );
