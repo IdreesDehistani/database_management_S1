@@ -1,0 +1,205 @@
+SELECT
+    CASE
+        WHEN a.userscore < a.metascore THEN 'User score lower'
+        WHEN a.userscore > a.metascore THEN 'User score higher'
+    END AS score_group,
+
+    COUNT(*) AS movie_count,
+
+    ROUND(
+        AVG(
+            (
+                (c.international + c.domestic - d.prodbudget)::numeric
+                / NULLIF(d.prodbudget, 0)
+            ) * 100
+        ),
+        2
+    ) AS average_roi
+
+FROM score a
+INNER JOIN movie_sales b
+    ON a.movieid = b.movieid
+INNER JOIN sales c
+    ON b.salesid = c.salesid
+INNER JOIN movie d
+    ON a.movieid = d.movieid
+
+WHERE a.userscore <> a.metascore
+
+GROUP BY
+    CASE
+        WHEN a.userscore < a.metascore THEN 'User score lower'
+        WHEN a.userscore > a.metascore THEN 'User score higher'
+    END;
+
+querry 2
+SELECT
+    CASE
+        WHEN a.userscore < a.metascore THEN 'User score lower'
+        WHEN a.userscore > a.metascore THEN 'User score higher'
+    END AS score_group,
+    f.genre,
+    e.genreid,
+    COUNT(*) AS movie_count,
+    ROUND(
+        AVG(
+            (
+                (c.international + c.domestic - d.prodbudget)::numeric
+                / NULLIF(d.prodbudget, 0)
+            ) * 100
+        ),
+        2
+    ) AS average_roi
+
+FROM score a
+INNER JOIN movie_sales b
+    ON a.movieid = b.movieid
+INNER JOIN sales c
+    ON b.salesid = c.salesid
+INNER JOIN movie d
+    ON a.movieid = d.movieid
+INNER JOIN movie_genre e
+    ON e.movieid = d.movieid
+INNER JOIN genre f
+    ON e.genreid = f.genreid
+
+WHERE a.userscore <> a.metascore
+
+GROUP BY
+    f.genre,
+    e.genreid,
+    CASE
+        WHEN a.userscore < a.metascore THEN 'User score lower'
+        WHEN a.userscore > a.metascore THEN 'User score higher'
+    END
+
+ORDER BY e.genreid;
+
+querry to find percentile 
+SELECT
+    PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY prodbudget) AS percentile_25,
+    PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY prodbudget) AS percentile_50,
+    PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY prodbudget) AS percentile_75,
+    MAX(prodbudget) AS percentile_100
+FROM movie
+WHERE prodbudget IS NOT NULL;
+
+querry 3
+SELECT
+    CASE
+        WHEN a.prodbudget <= 9000000 THEN 'Group 1'
+        WHEN a.prodbudget > 9000000
+             AND a.prodbudget <= 12000000 THEN 'Group 2'
+        WHEN a.prodbudget > 12000000
+             AND a.prodbudget <= 22000000 THEN 'Group 3'
+        WHEN a.prodbudget > 22000000 THEN 'Group 4'
+    END AS prodbudgetgroup,
+
+    CASE
+        WHEN d.userscore < d.metascore THEN 'User score lower'
+        WHEN d.userscore > d.metascore THEN 'User score higher'
+    END AS score_group,
+
+    COUNT(*) AS movie_count,
+
+    ROUND(
+        AVG(
+            (
+                (c.international + c.domestic - a.prodbudget)::numeric
+                / NULLIF(a.prodbudget, 0)
+            ) * 100
+        ),
+        2
+    ) AS average_roi
+
+FROM movie a
+
+INNER JOIN movie_sales b
+    ON a.movieid = b.movieid
+
+INNER JOIN sales c
+    ON b.salesid = c.salesid
+
+INNER JOIN score d
+	ON d.movieid = a.movieid
+
+WHERE d.userscore <> d.metascore
+
+GROUP BY
+    CASE
+        WHEN a.prodbudget <= 9000000 THEN 'Group 1'
+        WHEN a.prodbudget > 9000000
+             AND a.prodbudget <= 12000000 THEN 'Group 2'
+        WHEN a.prodbudget > 12000000
+             AND a.prodbudget <= 22000000 THEN 'Group 3'
+        WHEN a.prodbudget > 22000000 THEN 'Group 4'
+    END,
+
+    CASE
+        WHEN d.userscore < d.metascore THEN 'User score lower'
+        WHEN d.userscore > d.metascore THEN 'User score higher'
+    END
+
+ORDER BY
+    prodbudgetgroup,
+    score_group;
+
+querry 4
+SELECT
+    CASE
+        WHEN c.theater_count <= 3 THEN 'Group 1'
+        WHEN c.theater_count > 3
+             AND c.theater_count <= 19 THEN 'Group 2'
+        WHEN c.theater_count > 19
+             AND c.theater_count <= 2511 THEN 'Group 3'
+        WHEN c.theater_count > 2511 THEN 'Group 4'
+    END AS theatercountgroup,
+
+    CASE
+        WHEN d.userscore < d.metascore THEN 'User score lower'
+        WHEN d.userscore > d.metascore THEN 'User score higher'
+    END AS score_group,
+
+    COUNT(*) AS movie_count,
+
+    ROUND(
+        AVG(
+            (
+                (c.international + c.domestic - a.prodbudget)::numeric
+                / NULLIF(a.prodbudget, 0)
+            ) * 100
+        ),
+        2
+    ) AS average_roi
+
+FROM movie a
+
+INNER JOIN movie_sales b
+    ON a.movieid = b.movieid
+
+INNER JOIN sales c
+    ON b.salesid = c.salesid
+
+INNER JOIN score d
+	ON d.movieid = a.movieid
+
+WHERE d.userscore <> d.metascore and c.theater_count IS NOT NULL
+
+GROUP BY
+    CASE
+        WHEN c.theater_count <= 3 THEN 'Group 1'
+        WHEN c.theater_count > 3
+             AND c.theater_count <= 19 THEN 'Group 2'
+        WHEN c.theater_count > 19
+             AND c.theater_count <= 2511 THEN 'Group 3'
+        WHEN c.theater_count > 2511 THEN 'Group 4'
+    END,
+
+    CASE
+        WHEN d.userscore < d.metascore THEN 'User score lower'
+        WHEN d.userscore > d.metascore THEN 'User score higher'
+    END
+
+ORDER BY
+    theatercountgroup,
+    score_group;

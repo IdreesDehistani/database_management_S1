@@ -55,7 +55,8 @@ CREATE TABLE cast_member (
 
 CREATE TABLE director (
     directorid INTEGER PRIMARY KEY,
-    directorname VARCHAR(255);
+    directorname VARCHAR(255)
+);
 
 CREATE TABLE sales (
     salesid INTEGER PRIMARY KEY,
