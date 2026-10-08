@@ -1,12 +1,7 @@
-# Ignore environment variable files (Idrees's pass is in it)
+# Ignore environment variable files
 .env
 
-user_r.csv
-expert_r.csv
-reviews.csv
-ExpertReviewsClean43LIWC.xlsx
-UserReviewsClean43LIWC.xlsx
-
+# Large raw review files - exceed GitHub's 100MB limit
 user_r.csv
 expert_r.csv
 reviews.csv
