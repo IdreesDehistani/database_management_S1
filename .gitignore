@@ -1,0 +1,14 @@
+# Ignore environment variable files (Idrees's pass is in it)
+.env
+
+user_r.csv
+expert_r.csv
+reviews.csv
+ExpertReviewsClean43LIWC.xlsx
+UserReviewsClean43LIWC.xlsx
+
+user_r.csv
+expert_r.csv
+reviews.csv
+ExpertReviewsClean43LIWC.xlsx
+UserReviewsClean43LIWC.xlsx

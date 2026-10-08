@@ -1,4 +1,4 @@
-MovieID,Title,Studio,Runtime,Rating,ReleaseDate,ProductionBudget
+movieid,Title,Studio,Runtime,Rating,ReleaseDate,ProductionBudget
 1,Fantasia 2000,Walt Disney,74.0,G,2000-01-01,
 2,Lupin III: The Castle of Cagliostro,Eleven Arts,100.0,PG-13,2000-01-01,
 3,My Dog Skip,Warner Bros.,95.0,PG,2000-01-12,7000000.0
