@@ -41,9 +41,16 @@ tables.
 - `movie_sales.csv`, `movie_awards.csv`, `movie_genre.csv`, `movie_cast.csv`, `movie_director.csv`
 
 ### SQL
-- `load_all.sql` — re-runnable script that drops, recreates, and loads the core
-  tables using PostgreSQL `\copy`. Run with `psql` from this directory.
-- `sqlcommand.txt` — working `CREATE TABLE` statements (schema scratchpad).
+- `sqlcommand.txt` — the `CREATE TABLE` statements for every table (parents and
+  junctions). Run these first to build the empty schema.
+
+### Analysis scripts (Python)
+- `main.py` — connects to the PostgreSQL database, builds the `gap_analysis`
+  view (audience score minus critic score per film), runs the H2 sub-questions,
+  and exports `gap_analysis.csv` and `ml_dataset.csv`.
+- `h2_stats.py` — runs the statistical tests on `gap_analysis.csv`
+  (Kruskal-Wallis, Spearman correlation, OLS regression).
+- `gap_analysis.csv`, `ml_dataset.csv` — the output tables produced by `main.py`.
 
 ### Cleaning notebooks (Python / pandas)
 - `Data_processing.ipynb`, `Data_proposed.ipynb` — main cleaning pipeline.
@@ -58,15 +65,42 @@ tables.
 - `meta.csv`, `sales.csv`, `movies_master.csv`, `movie_lookup.csv`,
   `movie_pk.csv`, `movie_proposed.csv` — intermediate extracts from cleaning.
 
+The large raw review files (`user_r.csv`, `expert_r.csv`, `reviews.csv` and the
+`*LIWC.xlsx` sources) are git-ignored and kept locally only.
+
 ## Loading the database
 
-`load_all.sql` covers the core tables. From this directory:
+1. Create the schema. From this directory, run the statements in
+   `sqlcommand.txt` against your database (parents first, junctions last):
+
+   ```bash
+   psql -d your_database -f sqlcommand.txt
+   ```
+
+2. Load each CSV into its table with PostgreSQL `\copy`, for example:
+
+   ```sql
+   \copy movie       FROM 'movie.csv'       CSV HEADER
+   \copy score       FROM 'score.csv'       CSV HEADER
+   \copy movie_sales FROM 'movie_sales.csv' CSV HEADER
+   ```
+
+   Load the parent tables (`movie`, `sales`, `awards`, `genre`, `score`,
+   `cast_member`, `director`) before the junction tables.
+
+## Running the H2 analysis
+
+`main.py` and `h2_stats.py` answer research question H2 (is there a gap between
+audience and critic scores, and what drives it?).
 
 ```bash
-psql -d your_database -f load_all.sql
+pip install psycopg2 pandas python-dotenv statsmodels scipy
 ```
 
-It drops existing tables, recreates the schema, loads each CSV (parents first,
-junctions last), and prints a row count per table to verify the load. The cast
-and director tables (`cast_member`, `director`, `movie_cast`, `movie_director`)
-are defined in `sqlcommand.txt` and loaded from their CSVs.
+Database credentials are read from a `.env` file (git-ignored) using these
+variables: `PGHOST`, `PGDATABASE`, `PGUSER`, `PGPASSWORD`, `PGPORT`.
+
+```bash
+python main.py       # builds the view, prints the sub-questions, exports the CSVs
+python h2_stats.py   # runs the statistical tests on gap_analysis.csv
+```
